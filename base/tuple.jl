@@ -390,6 +390,14 @@ all(x::Tuple{Bool, Bool}) = x[1]&x[2]
 all(x::Tuple{Bool, Bool, Bool}) = x[1]&x[2]&x[3]
 # use generic reductions for the rest
 
+# For bootstrap it's helpful to define a custom version
+_tuple_all(f::Function, t::Tuple) = _tuple_all(f, true, t...)
+function _tuple_all(f::Function, tf::Bool, a, b...)
+    @_inline_meta
+    _tuple_all(f, tf & f(a), b...)
+end
+_tuple_all(f::Function, tf::Bool) = tf
+
 any(x::Tuple{}) = false
 any(x::Tuple{Bool}) = x[1]
 any(x::Tuple{Bool, Bool}) = x[1]|x[2]

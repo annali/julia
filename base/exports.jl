@@ -381,6 +381,7 @@ export
     invperm,
     invpermute!,
     isassigned,
+    is_one_indexed,
     isperm,
     issorted,
     last,

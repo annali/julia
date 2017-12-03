@@ -471,6 +471,7 @@ julia> norm(-2, Inf)
 
 # special cases of opnorm
 function opnorm1(A::AbstractMatrix{T}) where T
+    @assert is_one_indexed(A)
     m, n = size(A)
     Tnorm = typeof(float(real(zero(T))))
     Tsum = promote_type(Float64, Tnorm)
@@ -488,6 +489,7 @@ function opnorm1(A::AbstractMatrix{T}) where T
 end
 
 function opnorm2(A::AbstractMatrix{T}) where T
+    @assert is_one_indexed(A)
     m,n = size(A)
     if m == 1 || n == 1 return norm2(A) end
     Tnorm = typeof(float(real(zero(T))))
@@ -495,6 +497,7 @@ function opnorm2(A::AbstractMatrix{T}) where T
 end
 
 function opnormInf(A::AbstractMatrix{T}) where T
+    @assert is_one_indexed(A)
     m,n = size(A)
     Tnorm = typeof(float(real(zero(T))))
     Tsum = promote_type(Float64, Tnorm)
@@ -872,6 +875,7 @@ true
 ```
 """
 function (\)(A::AbstractMatrix, B::AbstractVecOrMat)
+    @assert is_one_indexed(A, B)
     m, n = size(A)
     if m == n
         if istril(A)
@@ -1031,6 +1035,7 @@ false
 ```
 """
 function istriu(A::AbstractMatrix, k::Integer = 0)
+    @assert is_one_indexed(A)
     m, n = size(A)
     for j in 1:min(n, m + k - 1)
         for i in max(1, j - k + 1):m
@@ -1072,6 +1077,7 @@ false
 ```
 """
 function istril(A::AbstractMatrix, k::Integer = 0)
+    @assert is_one_indexed(A)
     m, n = size(A)
     for j in max(1, k + 2):n
         for i in 1:min(j - k - 1, m)
@@ -1184,6 +1190,7 @@ end
 # Elementary reflection similar to LAPACK. The reflector is not Hermitian but
 # ensures that tridiagonalization of Hermitian matrices become real. See lawn72
 @inline function reflector!(x::AbstractVector)
+    @assert is_one_indexed(x)
     n = length(x)
     @inbounds begin
         ξ1 = x[1]
@@ -1207,6 +1214,7 @@ end
 
 # apply reflector from left
 @inline function reflectorApply!(x::AbstractVector, τ::Number, A::StridedMatrix)
+    @assert is_one_indexed(x)
     m, n = size(A)
     if length(x) != m
         throw(DimensionMismatch("reflector has length $(length(x)), which must match the first dimension of matrix A, $m"))

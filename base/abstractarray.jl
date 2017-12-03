@@ -83,6 +83,18 @@ function axes(A)
     map(OneTo, size(A))
 end
 
+"""
+    is_one_indexed(A)
+    is_one_indexed(A, B, ...)
+
+Return `true` if the indices of `A` start at 1 along each axis.
+If multiple arguments are passed, all must be 1-indexed.
+"""
+is_one_indexed(obj)                 = true    # this is not a required trait
+is_one_indexed(A::AbstractArray)    = _tuple_all(x->first(x)==1, axes(A))
+
+is_one_indexed(A...) = _tuple_all(is_one_indexed, A)
+
 # Performance optimization: get rid of a branch on `d` in `axes(A, d)`
 # for d=1. 1d arrays are heavily used, and the first dimension comes up
 # in other applications.
