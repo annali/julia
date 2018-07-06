@@ -1750,6 +1750,7 @@ end
 @deprecate startswith(a::Vector{UInt8}, b::Vector{UInt8}) length(a) >= length(b) && view(a, 1:length(b)) == b
 
 @deprecate indices1 axes1
+@deprecate _length length
 
 # END 0.7 deprecations
 
