@@ -383,12 +383,15 @@ function _accumulate1!(op, B, v1, A::AbstractVector, dim::Integer)
     inds = LinearIndices(A)
     inds == LinearIndices(B) || throw(DimensionMismatch("LinearIndices of A and B don't match"))
     dim > 1 && return copyto!(B, A)
-    i1 = inds[1]
+    (i1, state) = iterate(inds) # We checked earlier that A isn't empty
     cur_val = v1
     B[i1] = cur_val
-    @inbounds for i in inds[2:end]
+    next = iterate(inds, state)
+    @inbounds while next !== nothing
+        (i, state) = next
         cur_val = op(cur_val, A[i])
         B[i] = cur_val
+        next = iterate(inds, state)
     end
     return B
 end
